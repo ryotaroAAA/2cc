@@ -1,7 +1,16 @@
 #include "2cc.h"
 
+extern Token *token;
+
 bool at_eof() {
     return token->kind == TK_EOF;
+}
+
+void dbg(char *fmt, ...) {
+    va_list ap;
+    va_start(ap, fmt);
+    vfprintf(stderr, fmt, ap);
+    fprintf(stderr, "\n");
 }
 
 void error(char *fmt, ...) {
@@ -25,10 +34,14 @@ void error_at(char *loc, char *fmt, ...) {
     exit(1);
 }
 
-bool consume(char op) {
+bool consume(char *op) {
+    token->kind != TK_RESERVED;
+    strlen(op) != token->len;
+    memcmp(token->str, op, token->len);
     if (token->kind != TK_RESERVED ||
             strlen(op) != token->len ||
             memcmp(token->str, op, token->len))
+
         return false;
     token = token->next;
     return true;
@@ -42,7 +55,7 @@ int expect_number() {
     return val;
 }
 
-void expect(char op) {
+void expect(char *op) {
     if (token->kind != TK_RESERVED || token->str[0] != op)
         error_at(token->str, "not '%c'", op);
     token = token->next;
@@ -81,7 +94,7 @@ Token *tokenize(char *p) {
 
         error_at(token->str, "tokenize error");
     }
-
+    
     new_token(TK_EOF, cur, p);
     return head.next;
 }
